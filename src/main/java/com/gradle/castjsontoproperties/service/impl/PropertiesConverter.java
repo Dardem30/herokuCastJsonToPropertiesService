@@ -1,6 +1,7 @@
 package com.gradle.castjsontoproperties.service.impl;
 
 import com.gradle.castjsontoproperties.service.IConverter;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +19,14 @@ import java.util.stream.Stream;
 public class PropertiesConverter implements IConverter {
     private boolean flag = false;
     private String keys = "";
-    private final File propFile = new File(ClassLoader.getSystemResource("app.properties").getPath());
+    private final static Logger logger = Logger.getLogger(PropertiesConverter.class);
 
     @Override
     public String toProperties(final MultipartFile multipartFile) throws IOException {
+
+        logger.info(ClassLoader.getSystemResource("app.properties").getPath());
+        logger.info(ClassLoader.getSystemResource("app.json").getPath());
+        final File propFile = new File(ClassLoader.getSystemResource("app.properties").getPath());
         File file = new File(ClassLoader.getSystemResource("app.json").getPath());
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.write(multipartFile.getBytes());
