@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 public class PropertiesConverter implements IConverter {
     private boolean flag = false;
     private String keys = "";
-    private final File propFile = new File(getClass().getClassLoader().getResource("app.properties").getFile());
+    private final File propFile = new File(("app.properties"));
 
     @Override
     public String toProperties(final MultipartFile multipartFile) throws IOException {
-        File file = new File(getClass().getClassLoader().getResource("app.json").getFile());
+        File file = new File("app.json");
         file.createNewFile();
         propFile.createNewFile();
         try (FileOutputStream fos = new FileOutputStream(file)) {
