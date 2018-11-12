@@ -24,6 +24,7 @@ public class PropertiesConverter implements IConverter {
     public String toProperties(final MultipartFile multipartFile) throws IOException {
         File file = new File(getClass().getClassLoader().getResource("app.json").getFile());
         file.createNewFile();
+        propFile.createNewFile();
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(multipartFile.getBytes());
         }
