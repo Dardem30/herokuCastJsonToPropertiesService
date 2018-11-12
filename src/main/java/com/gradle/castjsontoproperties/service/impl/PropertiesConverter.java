@@ -18,13 +18,11 @@ import java.util.stream.Stream;
 public class PropertiesConverter implements IConverter {
     private boolean flag = false;
     private String keys = "";
-    private final File propFile = new File("./src/main/java/com/gradle/castjsontoproperties/app.properties");
+    private final File propFile = new File(getClass().getClassLoader().getResource("app.properties").getFile());
 
     @Override
     public String toProperties(final MultipartFile multipartFile) throws IOException {
-        File file = new File("./src/main/java/com/gradle/castjsontoproperties/app.json");
-        file.createNewFile();
-        propFile.createNewFile();
+        File file = new File(getClass().getClassLoader().getResource("app.json").getFile());
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(multipartFile.getBytes());
         }
@@ -32,7 +30,7 @@ public class PropertiesConverter implements IConverter {
         InputStream inStream = new FileInputStream(propFile);
         properties.load(inStream);
         inStream.close();
-        final JSONObject jsonObject = new JSONObject(IConverter.readFile(file.getPath()));
+        final JSONObject jsonObject = new JSONObject(IConverter.readFile(file.getAbsolutePath()));
         Stream<Map.Entry<String, Object>> stream = jsonObject.toMap().entrySet().stream();
         properties.putAll(stream
                 .peek(entry -> {
@@ -54,7 +52,7 @@ public class PropertiesConverter implements IConverter {
         FileWriter writer = new FileWriter(propFile);
         properties.store(writer, null);
         writer.close();
-        return IConverter.readFile(propFile.getPath());
+        return IConverter.readFile(propFile.getAbsolutePath());
     }
 
     private void jsonObjectEntry(final Object key, final Properties properties, final Map<String, Object> map) {
