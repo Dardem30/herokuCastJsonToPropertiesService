@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 public class PropertiesConverter implements IConverter {
     private boolean flag = false;
     private String keys = "";
-    private final File propFile = new File("app.properties");
+    private final File propFile = new File("./src/main/java/com/gradle/castjsontoproperties/app.properties");
 
     @Override
     public String toProperties(final MultipartFile multipartFile) throws IOException {
-        File file = new File("app.json");
+        File file = new File("./src/main/java/com/gradle/castjsontoproperties/app.json");
         file.createNewFile();
         propFile.createNewFile();
         try (FileOutputStream fos = new FileOutputStream(file)) {
