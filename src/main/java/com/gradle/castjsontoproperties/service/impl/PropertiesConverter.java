@@ -23,11 +23,8 @@ public class PropertiesConverter implements IConverter {
 
     @Override
     public String toProperties(final MultipartFile multipartFile) throws IOException {
-
-        logger.info(ClassLoader.getSystemResource("app.properties").getPath());
-        logger.info(ClassLoader.getSystemResource("app.json").getPath());
-        final File propFile = new File(ClassLoader.getSystemResource("app.properties").getPath());
-        File file = new File(ClassLoader.getSystemResource("app.json").getPath());
+        File propFile = File.createTempFile("app", "properties");
+        File file = File.createTempFile("app", "json");
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.write(multipartFile.getBytes());
         }
@@ -35,7 +32,7 @@ public class PropertiesConverter implements IConverter {
         InputStream inStream = new FileInputStream(propFile);
         properties.load(inStream);
         inStream.close();
-        final JSONObject jsonObject = new JSONObject(IConverter.readFile(file.getAbsolutePath()));
+        final JSONObject jsonObject = new JSONObject(IConverter.readFile(file.getAbsolutePath(), null, null));
         Stream<Map.Entry<String, Object>> stream = jsonObject.toMap().entrySet().stream();
         properties.putAll(stream
                 .peek(entry -> {
@@ -57,7 +54,7 @@ public class PropertiesConverter implements IConverter {
         FileWriter writer = new FileWriter(propFile);
         properties.store(writer, null);
         writer.close();
-        return IConverter.readFile(propFile.getAbsolutePath());
+        return IConverter.readFile(propFile.getAbsolutePath(), propFile, file);
     }
 
     private void jsonObjectEntry(final Object key, final Properties properties, final Map<String, Object> map) {
